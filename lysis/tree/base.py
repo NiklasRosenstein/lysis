@@ -17,12 +17,23 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 r"""
-lysis
-~~~~~
+lysis.tree.base
+~~~~~~~~~~~~~~~
 
-Python based solver for propositional calculus and sets.
 """
 
-from lysis import tree
-from lysis import parser
+class Node(object):
+
+    def __eq__(self, other):
+        raise NotImplementedError
+
+    def __ne__(self, other):
+        raise NotImplementedError
+
+    def __contains__(self, other):
+        raise ExpressionError("%s is not a set." % self)
+
+    def evaluate(self, context):
+        raise NotImplementedError
+
 
