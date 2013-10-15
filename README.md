@@ -16,3 +16,7 @@ Python based solver for propositional calculus and sets.
 
 - Python 2
 - [py-scan](https://github.com/NiklasRosenstein/py-scan) (>= 4.6.0)
+
+## License
+
+Lysis is licensed under the MIT License.
