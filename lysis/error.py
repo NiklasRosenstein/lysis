@@ -32,9 +32,9 @@ class SyntaxError(CompilationError):
 
     def __init__(self, message, token):
         if token.invalid:
-            message = '%s got %s at %s' % (message, token, token.cursor)
+            message = '%s, got %s at %s' % (message, 'nothing', token.cursor)
         else:
-            message = '%s got %s' % (message, token)
+            message = '%s, got %s' % (message, token)
         super(SyntaxError, self).__init__(message)
         self.token = token
 

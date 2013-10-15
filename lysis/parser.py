@@ -66,10 +66,16 @@ class Parser(object):
                 raise SyntaxError('unexpected closing paranthesis', lexer.token)
 
         node = self._expression(lexer, varset)
-        node = self._operator(lexer, varset, node)
+        while lexer.token:
+            if enclosed and lexer.token.type == lexer.t_g_end:
+                break
+
+            node = self._operator(lexer, varset, node)
 
         if enclosed and lexer.token.type != lexer.t_g_end:
             raise SyntaxError('expected closing paranthesis', lexer.token)
+        elif enclosed:
+            lexer.read_token()
 
         return node
 

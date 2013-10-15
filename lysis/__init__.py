@@ -23,6 +23,7 @@ lysis
 Python based solver for propositional calculus and sets.
 """
 
+from lysis import error
 from lysis import tree
 from lysis import parser
 
