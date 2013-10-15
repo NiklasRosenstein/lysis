@@ -4,8 +4,8 @@ Python based solver for propositional calculus and sets.
 
 ## Command-line interface
 
-    $ lysis "(!A => B) <=> (A & !B)" -table
-    A  |  B  |  (!A => B) <=> (A & !B)
+    $ lysis "(/A => B) <=> (A & /B)" -table
+    A  |  B  |  (/A => B) <=> (A & /B)
     ---+-----+------------------------
     w  |  w  |           f
     w  |  f  |           w
