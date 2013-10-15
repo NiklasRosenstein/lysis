@@ -16,14 +16,28 @@
 # COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-r"""
-lysis.tree
-~~~~~~~~~~
 
-"""
+import scan
+import lysis
+import argparse
 
-from lysis.tree import base
-from lysis.tree import prop
-from lysis.tree import sets
+def main():
+    argp = argparse.ArgumentParser(description='Evaluate propositional '
+            'calculus and sets.')
+    argp.add_argument('expr', help='The expression to evaluate.')
+    args = argp.parse_args()
 
-from lysis.tree.base import Context
+
+    parser = lysis.parser.Parser()
+    node, varset = parser.parse(args.expr)
+
+    print node
+    print varset
+    print
+    context = lysis.Context()
+    print node.evaluate(context)
+
+
+
+main()
+

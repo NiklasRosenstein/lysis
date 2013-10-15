@@ -22,6 +22,10 @@ lysis.tree.base
 
 """
 
+import warnings
+
+from lysis.error import ExpressionError, ContextResolveError
+
 class Node(object):
 
     def __eq__(self, other):
@@ -35,5 +39,22 @@ class Node(object):
 
     def evaluate(self, context):
         raise NotImplementedError
+
+class Context(object):
+
+    def __init__(self):
+        super(Context, self).__init__()
+        self.vars = {}
+
+    def set(self, name, value):
+        if not isinstance(value, bool):
+            warnings.warn("passing non-bool value to Context.set", UserWarning)
+        self.vars[name] = value
+
+    def get(self, name):
+        if name not in self.vars:
+            raise ContextResolveError('context could not resolve "%s"' % name)
+        return bool(self.vars[name])
+
 
 

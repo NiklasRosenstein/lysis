@@ -26,3 +26,4 @@ Python based solver for propositional calculus and sets.
 from lysis import tree
 from lysis import parser
 
+from lysis.tree import Context

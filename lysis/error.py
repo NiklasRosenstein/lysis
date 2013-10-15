@@ -17,13 +17,33 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 r"""
-lysis.tree
-~~~~~~~~~~
+lysis.error
+~~~~~~~~~~~
 
 """
 
-from lysis.tree import base
-from lysis.tree import prop
-from lysis.tree import sets
+class LysisError(Exception):
+    pass
 
-from lysis.tree.base import Context
+class CompilationError(LysisError):
+    pass
+
+class SyntaxError(CompilationError):
+
+    def __init__(self, message, token):
+        if token.invalid:
+            message = '%s got %s at %s' % (message, token, token.cursor)
+        else:
+            message = '%s got %s' % (message, token)
+        super(SyntaxError, self).__init__(message)
+        self.token = token
+
+class EvaluationError(LysisError):
+    pass
+
+class ExpressionError(EvaluationError):
+    pass
+
+class ContextResolveError(EvaluationError):
+    pass
+

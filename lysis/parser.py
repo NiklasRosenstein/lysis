@@ -25,3 +25,92 @@ lysis.parser
 import scan
 import string
 
+from lysis.error import SyntaxError
+from lysis.tree import prop
+
+def get_tokenset():
+    set_ = scan.TokenSet()
+    set_.add('g_start', 0, scan.Keyword('('))
+    set_.add('g_end', 0, scan.Keyword(')'))
+    set_.add('neg', 0, scan.Keyword('/'))
+    set_.add('and', 0, scan.Keyword('&'))
+    set_.add('or', 0, scan.Keyword('|'))
+    set_.add('impl', 0, scan.Keyword('=>'))
+    set_.add('equal', 0, scan.Keyword('<=>'))
+    set_.add('prop', 0, scan.CharacterSet(string.uppercase, max_length=1))
+    set_.add('ws', 0, scan.CharacterSet(string.whitespace))
+    set_.ws.skip = True
+
+    return set_
+
+class Parser(object):
+
+    def __init__(self, tokenset=None):
+        super(Parser, self).__init__()
+        self.tokenset = tokenset or get_tokenset()
+
+    def parse(self, expr):
+        lexer = scan.Lexer.from_string(expr, self.tokenset)
+        varset = set()
+        token = lexer.read_token()
+        enclosed = token.type == lexer.t_g_start
+        if enclosed:
+            lexer.read_token()
+        return self._group(lexer, varset, enclosed), varset
+
+    def _group(self, lexer, varset, enclosed=True):
+        if lexer.token.type == lexer.t_g_end:
+            if enclosed:
+                raise SyntaxError('empty paranthesis', lexer.token)
+            else:
+                raise SyntaxError('unexpected closing paranthesis', lexer.token)
+
+        node = self._expression(lexer, varset)
+        node = self._operator(lexer, varset, node)
+
+        if enclosed and lexer.token.type != lexer.t_g_end:
+            raise SyntaxError('expected closing paranthesis', lexer.token)
+
+        return node
+
+    def _expression(self, lexer, varset):
+        if lexer.token.type == lexer.t_prop:
+            varset.add(lexer.token.value)
+            node = prop.Proposition(lexer.token.value)
+            lexer.read_token()
+        elif lexer.token.type == lexer.t_neg:
+            lexer.read_token()
+            node = prop.Negation(self._expression(lexer, varset))
+        elif lexer.token.type == lexer.t_g_start:
+            lexer.read_token()
+            node = self._group(lexer, varset, True)
+        else:
+            raise SyntaxError('expected expression', lexer.token)
+
+        return node
+
+    def _operator(self, lexer, varset, left):
+        if lexer.token.type == lexer.t_and:
+            op_type = prop.And
+        elif lexer.token.type == lexer.t_or:
+            op_type = prop.Or
+        elif lexer.token.type == lexer.t_impl:
+            op_type = prop.Implication
+        elif lexer.token.type == lexer.t_equal:
+            op_type = prop.Equality
+        elif not lexer.token.invalid and lexer.token.type != lexer.t_g_end:
+            raise SyntaxError('expected nothing or expression', lexer.token)
+        else:
+            return left
+
+        lexer.read_token()
+        right = self._expression(lexer, varset)
+        return op_type(left, right)
+
+
+
+
+
+
+
+
