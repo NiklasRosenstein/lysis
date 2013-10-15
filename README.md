@@ -15,5 +15,4 @@ Python based solver for propositional calculus and sets.
 ## Requirements
 
 - Python 2
-- [`py-scan`](https://github.com/NiklasRosenstein/py-scan) (>= 4.6.0)
-
+- `[py-scan](https://github.com/NiklasRosenstein/py-scan)` (>= 4.6.0)
