@@ -51,11 +51,16 @@ class Parser(object):
 
     def parse(self, expr):
         lexer = scan.Lexer.from_string(expr, self.tokenset)
-        varset = set()
-        token = lexer.read_token()
+        lexer.read_token()
+        return self.parse_from_lexer(lexer)
+
+    def parse_from_lexer(self, lexer):
+        token = lexer.token
         enclosed = token.type == lexer.t_g_start
         if enclosed:
             lexer.read_token()
+
+        varset = set()
         return self._group(lexer, varset, enclosed), varset
 
     def _group(self, lexer, varset, enclosed=True):
@@ -70,7 +75,10 @@ class Parser(object):
             if enclosed and lexer.token.type == lexer.t_g_end:
                 break
 
-            node = self._operator(lexer, varset, node)
+            new_node = self._operator(lexer, varset, node)
+            if new_node is node:
+                break
+            node = new_node
 
         if enclosed and lexer.token.type != lexer.t_g_end:
             raise SyntaxError('expected closing paranthesis', lexer.token)
