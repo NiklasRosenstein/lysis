@@ -14,6 +14,20 @@ $ lysis --table "A & B <=> A | /B" "A | /B"
  f | f | f                      | t
 ```
 
+```
+$ lysis --table "((A => B) & (B => C) & (C => A)) <=> ((A <=> B) & (B <=> C) & (C <=> A))" 
+ A | B | C | (((A => B) & ((B => C) & (C => A))) <=> ((A <=> B) & ((B <=> C) & (C <=> A))))
+---+---+---+-------------------------------------------------------------------------------
+ t | t | t | t
+ t | t | f | t
+ t | f | t | t
+ t | f | f | t
+ f | t | t | t
+ f | t | f | t
+ f | f | t | t
+ f | f | f | t
+```
+
 ## Features
 
 - operator precedence is taken into account (eg. `C => A & B` evaluates to `C => (A & B)`)
