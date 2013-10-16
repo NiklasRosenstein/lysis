@@ -102,8 +102,8 @@ def main():
                 args.table = False
     if args.table:
         # Generate the head-line and under-line.
-        headline = ''
-        underline = ''
+        headline = ' '
+        underline = '-'
         for i, var in enumerate(variables):
             headline += var
             underline += '-'
@@ -120,7 +120,7 @@ def main():
 
         # Evaluate the table.
         for context in lysis.cfactory.TabularContextFactory(variables):
-            line = ''
+            line = ' '
             for i, var in enumerate(variables):
                 line += fmt_bool(context.get(var))
                 if i < len(variables) - 1:
