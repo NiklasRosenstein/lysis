@@ -32,8 +32,7 @@ def fmt_bool(x):
 
 def main():
     argp = argparse.ArgumentParser(description='Evaluate propositional '
-            'calculus and set expressions (latter has yet to be '
-            'implemented).')
+            'calculus expressions.')
     argp.add_argument('expr', nargs='+', help='One or more expressions to '
             'evaluate.')
     argp.add_argument('-t', '--table', help='Evaluate all possible '

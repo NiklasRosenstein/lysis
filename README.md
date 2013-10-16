@@ -1,16 +1,20 @@
 # Lysis
 
-Python based solver for propositional calculus and sets.
+Python based solver for propositional calculus.
 
 ## Command-line interface
 
-    $ lysis "(/A => B) <=> (A & /B)" -table
-    A  |  B  |  (/A => B) <=> (A & /B)
-    ---+-----+------------------------
-    w  |  w  |           f
-    w  |  f  |           w
-    f  |  w  |           f
-    f  |  f  |           w
+    $ python -m lysis --table "(A & B) & C" "A & (B & C)"
+    A | B | C | ((A & B) & C) | (A & (B & C))
+    --+---+---+---------------+--------------
+    t | t | t | t             | t
+    t | t | f | f             | f
+    t | f | t | f             | f
+    t | f | f | f             | f
+    f | t | t | f             | f
+    f | t | f | f             | f
+    f | f | t | f             | f
+    f | f | f | f             | f
 
 ## Requirements
 
