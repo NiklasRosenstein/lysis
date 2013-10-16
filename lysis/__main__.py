@@ -24,11 +24,17 @@ import lysis
 from lysis.utils import term
 import argparse
 
-def fmt_bool(x):
+def fmt_bool_color(x):
     if x:
         return term.colorize('t', 'green')
     else:
         return term.colorize('f', 'red')
+
+def fmt_bool_normal(x):
+    if x:
+        return 't'
+    else:
+        return 'f'
 
 def main():
     argp = argparse.ArgumentParser(description='Evaluate propositional '
@@ -41,7 +47,13 @@ def main():
     argp.add_argument('-nw', '--no-warn', help='Disables the warning if '
             'expected output/calculation time exceeds a certain number.',
             action='store_true')
+    argp.add_argument('-c', '--colorized', help='Colorize output.',
+            action='store_true')
     args = argp.parse_args()
+
+    # Process arguments.
+    fmt_bool = fmt_bool_color if args.colorized else fmt_bool_normal
+    colorize = term.colorize if args.colorized else lambda x, color: str(x)
 
     # Parse the expressions.
     parser = lysis.parser.Parser()
@@ -61,7 +73,7 @@ def main():
             pos = exc.cursor
             line = "[SyntaxError in expression %d]:" % i
             print line, expr
-            print len(line) * " ", (pos.column - 1) * term.colorize('~', 'blue') + term.colorize('^', 'red')
+            print len(line) * " ", (pos.column - 1) * colorize('~', 'blue') + colorize('^', 'red')
             return 1
 
     # Sort the variables into a fixed tuple.
