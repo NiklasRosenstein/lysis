@@ -19,7 +19,14 @@
 
 import sys
 import lysis
+from lysis.utils import term
 import argparse
+
+def fmt_bool(x):
+    if x:
+        return term.colorize('t', 'green')
+    else:
+        return term.colorize('f', 'red')
 
 def main():
     argp = argparse.ArgumentParser(description='Evaluate propositional '
@@ -61,8 +68,37 @@ def main():
             if answer.strip().lower() not in ('y', 'yes', 'true'):
                 args.table = False
     if args.table:
-        pass
+        # Create a sorted list of the variables.
+        variables = list(sorted(varset))
 
+        # Generate the head-line and under-line.
+        headline = ''
+        underline = ''
+        for i, var in enumerate(variables):
+            headline += var
+            underline += '-'
+            if i < len(variables) - 1:
+                headline += ' | '
+                underline += '-+-'
+
+        strformat = str(node)
+        headline += ' | ' + strformat
+        underline += '-+-' + len(strformat) * '-'
+
+        print headline
+        print underline
+
+        # Evaluate the table.
+        for context in lysis.cfactory.TabularContextFactory(variables):
+            line = ''
+            for i, var in enumerate(variables):
+                line += fmt_bool(context.get(var))
+                if i < len(variables) - 1:
+                    line += ' | '
+
+            line += ' | ' + fmt_bool(node.evaluate(context))
+
+            print line
 
 if __name__ == "__main__":
     sys.exit(main())

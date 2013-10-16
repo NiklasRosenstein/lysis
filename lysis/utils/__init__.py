@@ -16,16 +16,3 @@
 # COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-r"""
-lysis
-~~~~~
-
-Python based solver for propositional calculus and sets.
-"""
-
-from lysis import error
-from lysis import tree
-from lysis import parser
-from lysis import cfactory
-
-from lysis.tree import Context

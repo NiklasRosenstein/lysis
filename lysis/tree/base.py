@@ -46,6 +46,9 @@ class Context(object):
         super(Context, self).__init__()
         self.vars = {}
 
+    def __str__(self):
+        return "Context(%s)" % self.vars
+
     def set(self, name, value):
         if not isinstance(value, bool):
             warnings.warn("passing non-bool value to Context.set", UserWarning)
@@ -55,6 +58,11 @@ class Context(object):
         if name not in self.vars:
             raise ContextResolveError('context could not resolve "%s"' % name)
         return bool(self.vars[name])
+
+    def copy(self):
+        context = Context()
+        context.vars = self.vars.copy()
+        return context
 
 
 

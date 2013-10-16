@@ -17,15 +17,39 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 r"""
-lysis
-~~~~~
+lysis.cfactory
+~~~~~~~~~~~~~
 
-Python based solver for propositional calculus and sets.
 """
 
-from lysis import error
-from lysis import tree
-from lysis import parser
-from lysis import cfactory
-
 from lysis.tree import Context
+
+class ContextFactory(object):
+
+    def __iter__(self):
+        raise NotImplementedError
+
+class TabularContextFactory(ContextFactory):
+
+    def __init__(self, varset):
+        super(TabularContextFactory, self).__init__()
+        self.varset = tuple(varset)
+
+    def __iter__(self):
+        context = Context()
+        for item in self._generate(0, context):
+            yield item
+
+    def _generate(self, var_index, context):
+        if var_index < len(self.varset):
+            context.set(self.varset[var_index], True)
+            for item in self._generate(var_index + 1, context):
+                yield item
+            context.set(self.varset[var_index], False)
+            for item in self._generate(var_index + 1, context):
+                yield item
+        elif var_index >= len(self.varset):
+            yield context.copy()
+        else:
+            assert False, "got var_index < 0"
+
