@@ -41,6 +41,16 @@ def get_tokenset():
     set_.add('ws', 0, scan.CharacterSet(string.whitespace))
     set_.ws.skip = True
 
+    # Set up operator priorities.
+    and_ = getattr(set_, 'and')
+    and_.priority = 100
+
+    or_ = getattr(set_, 'or')
+    or_.priority = 200
+
+    set_.impl.priority = 50
+    set_.equal.priority = 20
+
     return set_
 
 class Parser(object):
@@ -99,22 +109,41 @@ class Parser(object):
         return node
 
     def _operator(self, lexer, varset, left):
-        if lexer.token.type == lexer.t_and:
-            op_type = prop.And
-        elif lexer.token.type == lexer.t_or:
-            op_type = prop.Or
-        elif lexer.token.type == lexer.t_impl:
-            op_type = prop.Implication
-        elif lexer.token.type == lexer.t_equal:
-            op_type = prop.Equality
-        elif not lexer.token.invalid and lexer.token.type != lexer.t_g_end:
-            raise SyntaxError('expected nothing or expression', lexer.token)
-        else:
-            return left
+        nodes = [left]
+        operators = []
 
-        lexer.read_token()
-        right = self._expression(lexer, varset)
-        return op_type(left, right)
+        while True:
+            if lexer.token.type == lexer.t_and:
+                op_type = prop.And
+            elif lexer.token.type == lexer.t_or:
+                op_type = prop.Or
+            elif lexer.token.type == lexer.t_impl:
+                op_type = prop.Implication
+            elif lexer.token.type == lexer.t_equal:
+                op_type = prop.Equality
+            elif not lexer.token.invalid and lexer.token.type != lexer.t_g_end:
+                raise SyntaxError('expected nothing or expression', lexer.token)
+            else:
+                break
+
+            priority = lexer.token.type.priority
+            while operators and operators[-1][1] > priority:
+                op, prior = operators.pop()
+                assert len(nodes) > 1
+                r, l = nodes.pop(), nodes.pop()
+                nodes.append(op(l, r))
+
+            operators.append([op_type, lexer.token.type.priority])
+            lexer.read_token()
+            nodes.append(self._expression(lexer, varset))
+
+        for op, prior in reversed(operators):
+            assert len(nodes) > 1
+            r, l = nodes.pop(), nodes.pop()
+            nodes.append(op(l, r))
+
+        assert len(nodes) == 1
+        return nodes[0]
 
 
 
