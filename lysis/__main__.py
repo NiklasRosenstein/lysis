@@ -21,14 +21,24 @@
 import sys
 import scan
 import lysis
-from lysis.utils import term
 import argparse
+
+colored = None
+if sys.platform == 'win32':
+    try:
+        import colorama
+    except ImportError:
+        colored = lambda x, color: str(x)
+    else:
+        colorama.init()
+if not colored:
+    from termcolor import colored
 
 def fmt_bool_color(x):
     if x:
-        return term.colorize('t', 'green')
+        return colored('t', 'green')
     else:
-        return term.colorize('f', 'red')
+        return colored('f', 'red')
 
 def fmt_bool_normal(x):
     if x:
@@ -47,13 +57,13 @@ def main():
     argp.add_argument('-nw', '--no-warn', help='Disables the warning if '
             'expected output/calculation time exceeds a certain number.',
             action='store_true')
-    argp.add_argument('-c', '--colorized', help='Colorize output.',
+    argp.add_argument('-nc', '--no-color', help='Colorize output.',
             action='store_true')
     args = argp.parse_args()
 
     # Process arguments.
-    fmt_bool = fmt_bool_color if args.colorized else fmt_bool_normal
-    colorize = term.colorize if args.colorized else lambda x, color: str(x)
+    fmt_bool = fmt_bool_normal if args.no_color else fmt_bool_color
+    colorize = lambda x, color: str(x) if args.no_color else colored
 
     # Parse the expressions.
     parser = lysis.parser.Parser()
