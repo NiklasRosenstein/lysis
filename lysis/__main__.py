@@ -53,7 +53,9 @@ def main():
             variables |= varset
             nodes.append((node, varset))
         except lysis.error.SyntaxError as exc:
-            print "[SyntaxError in expression %d]:" % i, exc
+            line = "[SyntaxError in expression %d]:" % i
+            print line, expr
+            print len(line) * " ", exc
             return 1
         except scan.TokenizationError as exc:
             pos = exc.cursor
