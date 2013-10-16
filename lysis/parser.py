@@ -55,13 +55,8 @@ class Parser(object):
         return self.parse_from_lexer(lexer)
 
     def parse_from_lexer(self, lexer):
-        token = lexer.token
-        enclosed = token.type == lexer.t_g_start
-        if enclosed:
-            lexer.read_token()
-
         varset = set()
-        return self._group(lexer, varset, enclosed), varset
+        return self._group(lexer, varset, False), varset
 
     def _group(self, lexer, varset, enclosed=True):
         if lexer.token.type == lexer.t_g_end:
