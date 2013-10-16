@@ -32,7 +32,10 @@ if sys.platform == 'win32':
     else:
         colorama.init()
 if not colored:
-    from termcolor import colored
+    try:
+        from termcolor import colored
+    except ImportError:
+        colored = lambda x, color: str(x)
 
 def fmt_bool_color(x):
     if x:
