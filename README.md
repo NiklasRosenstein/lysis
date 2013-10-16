@@ -4,13 +4,15 @@ Python based solver for propositional calculus.
 
 ## Command-line interface
 
-    $ lysis --table "A & B <=> A | /B" "A | /B"
-     A | B | ((A & B) <=> (A | /B)) | (A | /B)
-    ---+---+------------------------+---------
-     t | t | t                      | t
-     t | f | f                      | t
-     f | t | t                      | f
-     f | f | f                      | t
+```
+$ lysis --table "A & B <=> A | /B" "A | /B"
+ A | B | ((A & B) <=> (A | /B)) | (A | /B)
+---+---+------------------------+---------
+ t | t | t                      | t
+ t | f | f                      | t
+ f | t | t                      | f
+ f | f | f                      | t
+```
 
 ## Features
 
