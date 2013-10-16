@@ -19,6 +19,7 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import sys
+import scan
 import lysis
 from lysis.utils import term
 import argparse
@@ -54,6 +55,12 @@ def main():
             nodes.append((node, varset))
         except lysis.error.SyntaxError as exc:
             print "[SyntaxError in expression %d]:" % i, exc
+            return 1
+        except scan.TokenizationError as exc:
+            pos = exc.cursor
+            line = "[SyntaxError in expression %d]:" % i
+            print line, expr
+            print len(line) * " ", (pos.column - 1) * term.colorize('~', 'blue') + term.colorize('^', 'red')
             return 1
 
     # Sort the variables into a fixed tuple.
