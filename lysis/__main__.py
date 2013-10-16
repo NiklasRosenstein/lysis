@@ -47,13 +47,13 @@ def main():
     parser = lysis.parser.Parser()
     nodes = []
     variables = set()
-    for expr in args.expr:
+    for i, expr in enumerate(args.expr):
         try:
             node, varset = parser.parse(expr)
             variables |= varset
             nodes.append((node, varset))
         except lysis.error.SyntaxError as exc:
-            print "[SyntaxError]:", exc
+            print "[SyntaxError in expression %d]:" % i, exc
             return 1
 
     # Sort the variables into a fixed tuple.
