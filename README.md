@@ -14,6 +14,8 @@ $ lysis --table "A & B <=> A | /B" "A | /B"
  f | f | f                      | t
 ```
 
+foo
+
 ## Features
 
 - operator precedence is taken into account (eg. `C => A & B` evaluates to `C => (A & B)`)
