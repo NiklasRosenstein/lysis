@@ -21,14 +21,33 @@
 import sys
 import scan
 import lysis
-from lysis.utils import term
 import argparse
 
-def fmt_bool(x):
-    if x:
-        return term.colorize('t', 'green')
+colored = None
+if sys.platform == 'win32':
+    try:
+        import colorama
+    except ImportError:
+        colored = lambda x, color: str(x)
     else:
-        return term.colorize('f', 'red')
+        colorama.init()
+if not colored:
+    try:
+        from termcolor import colored
+    except ImportError:
+        colored = lambda x, color: str(x)
+
+def fmt_bool_color(x):
+    if x:
+        return colored('t', 'green')
+    else:
+        return colored('f', 'red')
+
+def fmt_bool_normal(x):
+    if x:
+        return 't'
+    else:
+        return 'f'
 
 def main():
     argp = argparse.ArgumentParser(description='Evaluate propositional '
@@ -41,7 +60,13 @@ def main():
     argp.add_argument('-nw', '--no-warn', help='Disables the warning if '
             'expected output/calculation time exceeds a certain number.',
             action='store_true')
+    argp.add_argument('-nc', '--no-color', help='Colorize output.',
+            action='store_true')
     args = argp.parse_args()
+
+    # Process arguments.
+    fmt_bool = fmt_bool_normal if args.no_color else fmt_bool_color
+    colorize = lambda x, color: str(x) if args.no_color else colored
 
     # Parse the expressions.
     parser = lysis.parser.Parser()
@@ -61,7 +86,7 @@ def main():
             pos = exc.cursor
             line = "[SyntaxError in expression %d]:" % i
             print line, expr
-            print len(line) * " ", (pos.column - 1) * term.colorize('~', 'blue') + term.colorize('^', 'red')
+            print len(line) * " ", (pos.column - 1) * colorize('~', 'blue') + colorize('^', 'red')
             return 1
 
     # Sort the variables into a fixed tuple.
@@ -77,8 +102,8 @@ def main():
                 args.table = False
     if args.table:
         # Generate the head-line and under-line.
-        headline = ''
-        underline = ''
+        headline = ' '
+        underline = '-'
         for i, var in enumerate(variables):
             headline += var
             underline += '-'
@@ -95,7 +120,7 @@ def main():
 
         # Evaluate the table.
         for context in lysis.cfactory.TabularContextFactory(variables):
-            line = ''
+            line = ' '
             for i, var in enumerate(variables):
                 line += fmt_bool(context.get(var))
                 if i < len(variables) - 1:
