@@ -38,7 +38,7 @@ $ lysis --table "((A => B) & (B => C) & (C => A)) <=> ((A <=> B) & (B <=> C) & (
 - Python 2 (tested under Python 2.5 and 2.7)
 - [scan](https://github.com/NiklasRosenstein/scan) (>= 4.6.0)
 - [termcolor](https://pypi.python.org/pypi/termcolor) (>= 1.1.0; optional)
-- [colorama](https://pypi.python.org/pypi/colorama) (>= 0.2.7; optional)
+- [colorama](https://pypi.python.org/pypi/colorama) (>= 0.2.7; optional, for colored output on Windows)
 
 ## License
 
