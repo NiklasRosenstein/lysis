@@ -6,32 +6,37 @@ Python based solver for propositional calculus.
 
 ```
 $ lysis --table "A & B <=> A | /B" "A | /B"
- A | B | ((A & B) <=> (A | /B)) | (A | /B)
----+---+------------------------+---------
- t | t | t                      | t
- t | f | f                      | t
- f | t | t                      | f
- f | f | f                      | t
+╔═══╦═══╦════════════════════════╦══════════╗
+║ A ║ B ║ ((A & B) <=> (A | /B)) ║ (A | /B) ║
+╠═══╬═══╬════════════════════════╬══════════╣
+║ t ║ t ║ t                      ║ t        ║
+║ t ║ f ║ f                      ║ t        ║
+║ f ║ t ║ t                      ║ f        ║
+║ f ║ f ║ f                      ║ t        ║
+╚═══╩═══╩════════════════════════╩══════════╝
 ```
 
 ```
-$ lysis --table "((A => B) & (B => C) & (C => A)) <=> ((A <=> B) & (B <=> C) & (C <=> A))"
- A | B | C | (((A => B) & ((B => C) & (C => A))) <=> ((A <=> B) & ((B <=> C) & (C <=> A))))
----+---+---+-------------------------------------------------------------------------------
- t | t | t | t
- t | t | f | t
- t | f | t | t
- t | f | f | t
- f | t | t | t
- f | t | f | t
- f | f | t | t
- f | f | f | t
+$ lysis --table "((A & /B) => (C & /C)) <=> (A =>B)" "(A & /B)" "(C & /C)"
+╔═══╦═══╦═══╦═══════════════════════════════════════╦══════════╦══════════╗
+║ A ║ B ║ C ║ (((A & /B) => (C & /C)) <=> (A => B)) ║ (A & /B) ║ (C & /C) ║
+╠═══╬═══╬═══╬═══════════════════════════════════════╬══════════╬══════════╣
+║ t ║ t ║ t ║ t                                     ║ f        ║ f        ║
+║ t ║ t ║ f ║ t                                     ║ f        ║ f        ║
+║ t ║ f ║ t ║ t                                     ║ t        ║ f        ║
+║ t ║ f ║ f ║ t                                     ║ t        ║ f        ║
+║ f ║ t ║ t ║ t                                     ║ f        ║ f        ║
+║ f ║ t ║ f ║ t                                     ║ f        ║ f        ║
+║ f ║ f ║ t ║ t                                     ║ f        ║ f        ║
+║ f ║ f ║ f ║ t                                     ║ f        ║ f        ║
+╚═══╩═══╩═══╩═══════════════════════════════════════╩══════════╩══════════╝
 ```
 
 ## Features
 
 - operator precedence is taken into account (eg. `C => A & B` evaluates to `C => (A & B)`)
 - colorized output if supported (requires `termcolor` module, plus `colorama` on Windows)
+- unicode table-frame
 
 ## Requirements
 
