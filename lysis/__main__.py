@@ -146,10 +146,7 @@ def main():
                 if i < len(variables) - 1:
                     line += c_vert
             for i, (node, varset) in enumerate(nodes):
-                islast = i == (len(nodes) - 1)
-                if islast: sub = 2
-                else: sub = 1
-                line += c_vert + fmt_bool(node.evaluate(context), ' %s ' + (len(str(node)) - sub) * ' ')
+                line += c_vert + fmt_bool(node.evaluate(context), ' %s ' + (len(str(node)) - 1) * ' ')
 
             print c_vert + line + c_vert
 
