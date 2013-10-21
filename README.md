@@ -4,7 +4,7 @@ Python based solver for propositional calculus.
 
 ## Command-line interface
 
-    ![Preview of the command-line interface and output](preview.png)
+![Preview of the command-line interface and output](preview.png)
 
 ## Features
 
