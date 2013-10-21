@@ -66,7 +66,7 @@ def main():
 
     # Process arguments.
     fmt_bool = fmt_bool_normal if args.no_color else fmt_bool_color
-    colorize = lambda x, color: str(x) if args.no_color else colored
+    colorize = lambda x, color: str(x) if args.no_color else colored(x, color)
 
     # Parse the expressions.
     parser = lysis.parser.Parser()
