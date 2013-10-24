@@ -49,7 +49,7 @@ def get_tokenset():
     or_.priority = 200
 
     set_.impl.priority = 50
-    set_.equal.priority = 20
+    set_.equal.priority = 50
 
     return set_
 
