@@ -4,7 +4,27 @@ Python based solver for propositional calculus.
 
 ## Command-line interface
 
-![Preview of the command-line interface and output](https://raw.github.com/NiklasRosenstein/lysis/master/preview.png)
+```
+$ lysis -t "A => B" "ZED & /BE"
+| A   | B   | BE   | ZED   | (A => B)   | (ZED & /BE)   |
+|-----+-----+------+-------+------------+---------------|
+| t   | t   | t    | t     | t          | f             |
+| t   | t   | t    | f     | t          | f             |
+| t   | t   | f    | t     | t          | t             |
+| t   | t   | f    | f     | t          | f             |
+| t   | f   | t    | t     | f          | f             |
+| t   | f   | t    | f     | f          | f             |
+| t   | f   | f    | t     | f          | t             |
+| t   | f   | f    | f     | f          | f             |
+| f   | t   | t    | t     | t          | f             |
+| f   | t   | t    | f     | t          | f             |
+| f   | t   | f    | t     | t          | t             |
+| f   | t   | f    | f     | t          | f             |
+| f   | f   | t    | t     | t          | f             |
+| f   | f   | t    | f     | t          | f             |
+| f   | f   | f    | t     | t          | t             |
+| f   | f   | f    | f     | t          | f             |
+```
 
 ## Features
 
@@ -16,6 +36,7 @@ Python based solver for propositional calculus.
 
 - Python 2 (tested under Python 2.5 and 2.7)
 - [scan](https://github.com/NiklasRosenstein/scan) (>= 4.6.0)
+- [tabulate](https://pypi.python.org/pypi/tabulate) (>= 0.6)
 - [termcolor](https://pypi.python.org/pypi/termcolor) (>= 1.1.0; optional)
 - [colorama](https://pypi.python.org/pypi/colorama) (>= 0.2.7; optional, for colored output on Windows)
 
