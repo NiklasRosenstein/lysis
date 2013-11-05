@@ -22,6 +22,7 @@ import sys
 import scan
 import lysis
 import argparse
+import tabulate
 
 colored = None
 if sys.platform == 'win32':
@@ -37,25 +38,13 @@ if not colored:
     except ImportError:
         colored = lambda x, color: str(x)
 
-c_horiz = unichr(9552)
-c_vert = unichr(9553)
-c_cross = unichr(9580)
-c_top = unichr(9577)
-c_bottom = unichr(9574)
-c_tl = unichr(9556)
-c_tr = unichr(9559)
-c_bl = unichr(9562)
-c_br = unichr(9565)
-c_midr = unichr(9568)
-c_midl = unichr(9571)
-
-def fmt_bool_color(x, s):
+def fmt_bool_color(x, s='%s'):
     if x:
         return colored(s % 't', None, 'on_green')
     else:
         return colored(s % 'f', None, 'on_red')
 
-def fmt_bool_normal(x, s):
+def fmt_bool_normal(x, s='%s'):
     if x:
         return s % 't'
     else:
@@ -113,44 +102,19 @@ def main():
             if answer.strip().lower() not in ('y', 'yes', 'true'):
                 args.table = False
     if args.table:
-        # Generate the head-line and under-line.
-        topline = c_horiz
-        headline = ' '
-        underline = c_horiz
-        for i, var in enumerate(variables):
-            topline += c_horiz
-            headline += var
-            underline += c_horiz
-            if i < len(variables) - 1:
-                topline += '%s%s%s' % (c_horiz, c_bottom, c_horiz)
-                headline += ' %s ' % c_vert
-                underline += '%s%s%s' % (c_horiz, c_cross, c_horiz)
-        for i, (node, varset) in enumerate(nodes):
-            islast = i == (len(nodes) - 1)
-            if islast: add = c_horiz
-            else: add = ''
-            strformat = str(node)
-            topline += '%s%s%s' % (c_horiz, c_bottom, c_horiz) + len(strformat) * c_horiz + add
-            headline += ' %s ' % c_vert + strformat
-            underline += '%s%s%s' % (c_horiz, c_cross, c_horiz) + len(strformat) * c_horiz + add
-
-        print c_tl + topline + c_tr
-        print c_vert + headline + ' ' + c_vert
-        print c_midr + underline + c_midl
-
-        # Evaluate the table.
+        table = []
         for context in lysis.cfactory.TabularContextFactory(variables):
-            line = ''
+            column = []
             for i, var in enumerate(variables):
-                line += fmt_bool(context.get(var), ' %s ')
-                if i < len(variables) - 1:
-                    line += c_vert
+                column.append(fmt_bool(context.get(var)))
             for i, (node, varset) in enumerate(nodes):
-                line += c_vert + fmt_bool(node.evaluate(context), ' %s ' + (len(str(node)) - 1) * ' ')
+                column.append(fmt_bool(node.evaluate(context)))
 
-            print c_vert + line + c_vert
+            table.append(column)
 
-        print c_bl + topline.replace(c_bottom, c_top) + c_br
+
+        print tabulate.tabulate(table, tablefmt="orgtbl",
+                headers=list(variables) + map(lambda x: str(x[0]), nodes))
 
 if __name__ == "__main__":
     sys.exit(main())

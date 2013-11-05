@@ -37,7 +37,7 @@ def get_tokenset():
     set_.add('or', 0, scan.Keyword('|'))
     set_.add('impl', 0, scan.Keyword('=>'))
     set_.add('equal', 0, scan.Keyword('<=>'))
-    set_.add('prop', 0, scan.CharacterSet(string.uppercase, max_length=1))
+    set_.add('prop', 0, scan.CharacterSet(string.uppercase))
     set_.add('ws', 0, scan.CharacterSet(string.whitespace))
     set_.ws.skip = True
 
