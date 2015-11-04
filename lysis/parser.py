@@ -43,10 +43,10 @@ def get_tokenset():
 
     # Set up operator priorities.
     and_ = getattr(set_, 'and')
-    and_.priority = 100
+    and_.priority = 200
 
     or_ = getattr(set_, 'or')
-    or_.priority = 200
+    or_.priority = 100
 
     set_.impl.priority = 50
     set_.equal.priority = 50
